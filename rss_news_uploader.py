@@ -5,12 +5,13 @@ import time
 from bs4 import BeautifulSoup
 import time
 
+
 def remove_parenthesis(string):
     # 주어진 문자열에서 괄호로 시작하는 부분을 찾아 삭제
     while True:
         start_index = string.find("{")
         end_index = string.find("}")
-        if(end_index-start_index<1000):
+        if (end_index-start_index < 1000):
             if start_index != -1 and end_index != -1:
                 string = string[:start_index] + string[end_index+1:]
             else:
@@ -25,12 +26,6 @@ def remove_p_and_img_tags(html_text):
     for tag in soup(['p', 'img']):
         tag.decompose()
     return remove_parenthesis(str(soup))
-
-
-
-
-
-
 
 
 # ssh-agent 실행
@@ -107,37 +102,36 @@ rss_urls = {
     }
 }
 
-while True:
-    for press in rss_urls:
-        file_name = f"{press}.html"
-        file_path = os.path.join(base_path, file_name)
-        press_html = ""
-        titleList=""
-        for category in rss_urls[press]:
-            rss_url = rss_urls[press][category]
-            # feedparser로 RSS 뉴스 기사 파싱
-            feed = feedparser.parse(rss_url)
-            # 기사 정보를 HTML 코드로 변환하여 press_html에 추가
-            titleList=titleList+category+"_"
-            for entry in feed.entries:
-                temp = f"_{entry.title}\n"
-                try:
-                    if len(remove_p_and_img_tags(entry.content[0])) > len(remove_p_and_img_tags(entry.description)) and len(remove_p_and_img_tags(entry.content[0])) > len(remove_p_and_img_tags(entry.summary)):
-                        if len(remove_p_and_img_tags(entry.content[0])) <2:
-                            continue
-                        temp += f"{remove_p_and_img_tags(entry.content[0])}\n\n"
-                    else:
-                        if len(remove_p_and_img_tags(entry.summary)) < 2:
-                            continue
-                        temp += f"{remove_p_and_img_tags(entry.summary)}\n\n"
-                except AttributeError:
-                    if len(remove_p_and_img_tags(entry.description)) < 2:
+for press in rss_urls:
+    file_name = f"{press}.html"
+    file_path = os.path.join(base_path, file_name)
+    press_html = ""
+    titleList = ""
+    for category in rss_urls[press]:
+        rss_url = rss_urls[press][category]
+         # feedparser로 RSS 뉴스 기사 파싱
+        feed = feedparser.parse(rss_url)
+        # 기사 정보를 HTML 코드로 변환하여 press_html에 추가
+        titleList = titleList+category+"_"
+        for entry in feed.entries:
+            temp = f"_{entry.title}\n"
+            try:
+                if len(remove_p_and_img_tags(entry.content[0])) > len(remove_p_and_img_tags(entry.description)) and len(remove_p_and_img_tags(entry.content[0])) > len(remove_p_and_img_tags(entry.summary)):
+                    if len(remove_p_and_img_tags(entry.content[0])) < 2:
                         continue
-                    temp +=f"{remove_p_and_img_tags(entry.description)}\n\n"
+                    temp += f"{remove_p_and_img_tags(entry.content[0])}\n\n"
+                else:
+                    if len(remove_p_and_img_tags(entry.summary)) < 2:
+                        continue
+                    temp += f"{remove_p_and_img_tags(entry.summary)}\n\n"
+            except AttributeError:
+                if len(remove_p_and_img_tags(entry.description)) < 2:
+                    continue
+                temp += f"{remove_p_and_img_tags(entry.description)}\n\n"
                 press_html = press_html+temp
-            press_html +="^"; 
+            press_html += "^"
 
-        press_html=titleList+'\n'+press_html
+        press_html = titleList+'\n'+press_html
 
         # HTML 파일 생성
         with open(file_path, "w") as f:
@@ -147,11 +141,4 @@ while True:
 
         # 각 언론사별로 commit 및 push
         subprocess.call(f"git add {file_path}", cwd=base_path, shell=True)
-        subprocess.call(f"git commit -m 'Update news' && git push", cwd=base_path, shell=True)
-
-    # 1분 대기
-    time.sleep(1800)
-
-
-
-
+        subprocess.call(f"git commit -m 'Update news' && git push",cwd=base_path, shell=True)
