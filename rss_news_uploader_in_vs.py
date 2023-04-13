@@ -105,26 +105,56 @@ file_path = "/home/dls32208/Documents/VRChatKoreaNews/"
 
 # html 파일 생성 및 깃허브에 업로드
 for press in rss_urls:
+    if hasattr(ssl, '_create_unverified_context'):
+            ssl._create_default_https_context = ssl._create_unverified_context
+    file_name = f"{press}.html"
+    file_path = os.path.join(base_path, file_name)
+    press_html = ""
+    titleList=""
     for category in rss_urls[press]:
         rss_url = rss_urls[press][category]
-        if not os.path.exists(file_path+"/"+press):
-            os.mkdir(file_path+"/"+press)
-        file_name = f"{press}/{category}.html"
-
         # feedparser로 RSS 뉴스 기사 파싱
         feed = feedparser.parse(rss_url)
+        # 기사 정보를 HTML 코드로 변환하여 press_html에 추가
+        titleList=titleList+category+"_"
 
-        # html 파일 생성
-        with open(os.path.join(file_path, file_name), "w") as f:
-            f.write("<html>\n<head>\n<title>News</title>\n</head>\n<body>\n")
-            # 뉴스 기사 쓰기
-            for entry in feed.entries:
-                f.write(f"<h2><a href='{entry.link}'>{entry.title}</a></h2>\n")
-                f.write(f"<p>{entry.summary}</p>\n\n")
-            f.write("</body>\n</html>")
+        if not feed.bozo:
+            first_entry = feed.entries[0]
+            print("제목:", first_entry.title)
+            print("링크:", first_entry.link)
+        else:
+            print("잘못된 RSS 피드입니다.")
 
-        # 깃허브에 업로드
-        subprocess.call(f"cd {file_path} && git add {file_name} && git commit -m 'Update news' && git push", shell=True)
+
+        for entry in feed.entries:
+            temp = f"_{entry.title}\n"
+            try:
+                if hasattr(entry, 'content') and len(remove_p_and_img_tags(entry.content[0])) > len(remove_p_and_img_tags(entry.description)) and len(remove_p_and_img_tags(entry.content[0])) > len(remove_p_and_img_tags(entry.summary)):
+                    if len(remove_p_and_img_tags(entry.content[0])) < 2:
+                        continue
+                        temp += f"{remove_p_and_img_tags(entry.content[0])}\n\n"
+                elif hasattr(entry, 'summary') and len(remove_p_and_img_tags(entry.summary)) >= 2:
+                    temp += f"{remove_p_and_img_tags(entry.summary)}\n\n"
+                elif len(remove_p_and_img_tags(entry.description)) >= 2:
+                    temp += f"{remove_p_and_img_tags(entry.description)}\n\n"
+            except AttributeError:
+                if len(remove_p_and_img_tags(entry.summary)) < 2:
+                    continue
+                temp += f"{remove_p_and_img_tags(entry.summary)}\n\n"
+            press_html = press_html+temp
+        press_html +="^"; 
+
+    press_html=titleList+'\n'+press_html
+
+    # HTML 파일 생성
+    with open(file_path, "w") as f:
+        f.write("<html>\n<head>\n<title>News</title>\n</head>\n<body>\n")
+        f.write(press_html)
+        f.write("</body>\n</html>")
+
+    # 각 언론사별로 commit 및 push
+    subprocess.call(f"git add {file_path}", cwd=base_path, shell=True)
+    subprocess.call(f"git commit -m 'Update news' && git push", cwd=base_path, shell=True)
 
 # ssh-agent 종료
 ssh_agent.kill()
