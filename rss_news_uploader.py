@@ -44,7 +44,7 @@ rss_url = "http://www.yonhapnewstv.co.kr/browse/feed/"
 feed = feedparser.parse(rss_url)
 
 # 저장할 파일 경로와 파일명 설정
-base_path = "/home/dls32208/Documents/VRChatKoreaNews"
+base_path = "/home/dls32208/Documents/VRChatNews"
 file_name = "news.html"
 
 
