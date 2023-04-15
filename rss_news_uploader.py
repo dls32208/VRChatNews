@@ -99,6 +99,37 @@ rss_urls = {
         'English': 'https://www.mk.co.kr/rss/30800011/',
         '이코노미': 'https://www.mk.co.kr/rss/50000001/',
         '시티라이프': 'https://www.mk.co.kr/rss/60000007/'
+    },
+        'NHK': {
+        '主要ニュース': 'https://www3.nhk.or.jp/rss/news/cat0.xml',
+        '社会': 'https://www3.nhk.or.jp/rss/news/cat1.xml',
+        '科学・医療': 'https://www3.nhk.or.jp/rss/news/cat2.xml',
+        '政治': 'https://www3.nhk.or.jp/rss/news/cat3.xml',
+        '経済': 'https://www3.nhk.or.jp/rss/news/cat4.xml',
+        '国際': 'https://www3.nhk.or.jp/rss/news/cat5.xml',
+        'スポーツ': 'https://www3.nhk.or.jp/rss/news/cat6.xml',
+        '文化・エンタメ': 'https://www3.nhk.or.jp/rss/news/cat7.xml',
+    },
+    'ニッカンスポーツ':{
+        'スポーツ':'https://www.nikkansports.com/sports/atom.xml',
+        '野球': 'https://www.nikkansports.com/baseball/atom.xml',
+        'サッカー':'https://www.nikkansports.com/soccer/atom.xml',
+        'ゴルフ': 'https://www.nikkansports.com/sports/golf/atom.xml',
+        '格闘技':'https://www.nikkansports.com/battle/atom.xml',
+        '競馬':'http://p.nikkansports.com/goku-uma/rss/atom.xml',
+        '芸能':'https://www.nikkansports.com/entertainment/atom.xml',
+        'AKB48':'https://www.nikkansports.com/entertainment/akb48/atom.xml',
+        '社会':'https://www.nikkansports.com/general/atom.xml'
+    },
+    'Google':{
+        '天気':'https://news.google.com/rss/search?q=天気&hl=ja&gl=JP&ceid=JP:ja',
+        'WORLD':'https://news.google.com/news/rss/headlines/section/topic/WORLD?hl=ja&gl=JP&ceid=JP:ja',
+        'NATION':'https://news.google.com/news/rss/headlines/section/topic/NATION?hl=ja&gl=JP&ceid=JP:ja',
+        'BUSINESS' : 'https://news.google.com/news/rss/headlines/section/topic/BUSINESS?hl=ja&gl=JP&ceid=JP:ja',
+        'TECHNOLOGY' : 'https://news.google.com/news/rss/headlines/section/topic/TECHNOLOGY?hl=ja&gl=JP&ceid=JP:ja',
+        'ENTERTAINMENT' : 'https://news.google.com/news/rss/headlines/section/topic/ENTERTAINMENT?hl=ja&gl=JP&ceid=JP:ja',
+        'SPORTS' : 'https://news.google.com/news/rss/headlines/section/topic/SPORTS?hl=ja&gl=JP&ceid=JP:ja',
+        'SCIENCE' : 'https://news.google.com/news/rss/headlines/section/topic/SCIENCE?hl=ja&gl=JP&ceid=JP:ja',
     }
 }
 
